@@ -1,10 +1,12 @@
+# Dockerfile
+
 # Base para Go
 FROM golang:1.23-alpine
 
 # Diretório de trabalho
 WORKDIR /app
 
-# Copia apenas o go.mod e go.sum
+# Copia apenas os arquivos de módulos
 COPY go.mod ./
 
 # Instala dependências
