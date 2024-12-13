@@ -1,4 +1,4 @@
-# Relatório do Projeto: Sistema de Apostas Descentralizado com Blockchain Local
+# Sistema de Apostas Descentralizado com Blockchain Local
 
 ## Introdução
 
@@ -54,11 +54,51 @@ O Docker é uma ferramenta que permite criar, implantar e gerenciar aplicativos 
    - Configuração de contêineres com o Docker.
    - Integração dos nós com `docker-compose`.
 
-### Ferramentas Utilizadas
-- **Linguagem**: Go.
-- **Ambiente de Execução**: Docker.
-- **Gerenciamento**: Docker Compose.
-- **Teste**: Simulação local com múltiplos nós.
+---
+
+## Passo a Passo para Rodar o Sistema
+
+Este sistema foi implementado no repositório: [Plataforma de Votação Blockchain](https://github.com/lipealves13/plataforma-votacao-blockchain.git). Para executá-lo, siga os passos abaixo:
+
+### Pré-requisitos
+- **Docker** instalado ([Instruções de Instalação](https://docs.docker.com/get-docker/)).
+- **Git** instalado para clonar o repositório.
+
+### Etapas
+1. **Clone o Repositório**:
+   ```bash
+   git clone https://github.com/lipealves13/plataforma-votacao-blockchain.git
+   cd plataforma-votacao-blockchain
+   ```
+
+2. **Configure o Ambiente**:
+   Certifique-se de que os arquivos `Dockerfile` e `docker-compose.yml` estão configurados corretamente no diretório.
+
+3. **Suba os Contêineres**:
+   Execute o comando abaixo para construir e iniciar os nós:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Verifique os Logs**:
+   Certifique-se de que os nós estão rodando corretamente. Use o comando:
+   ```bash
+   docker logs -f node1
+   docker logs -f node2
+   docker logs -f node3
+   ```
+
+5. **Interaja com o Sistema**:
+   Após subir os contêineres, use a interface de linha de comando ou os endpoints disponíveis para:
+   - Criar eventos.
+   - Votar em eventos.
+   - Visualizar resultados.
+
+6. **Parar o Sistema**:
+   Para encerrar os contêineres:
+   ```bash
+   docker-compose down
+   ```
 
 ---
 
@@ -89,11 +129,6 @@ O projeto demonstrou a viabilidade de utilizar blockchain para implementar um si
 1. Explorou conceitos fundamentais de blockchain, como imutabilidade e descentralização.
 2. Demonstrou a integração de tecnologias modernas, como Docker, para facilitar o desenvolvimento e os testes.
 3. Ofereceu um ambiente acessível para simular aplicações descentralizadas.
-
-Futuras melhorias incluem:
-- Implementação de recompensas automáticas para usuários vencedores.
-- Criação de uma interface gráfica para facilitar o uso.
-- Suporte a eventos mais complexos.
 
 ---
 
