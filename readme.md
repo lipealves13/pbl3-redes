@@ -89,12 +89,14 @@ Este sistema foi implementado no repositório: [Plataforma de Votação Blockcha
    ```
 
 5. **Interaja com o Sistema**:
-   Após subir os contêineres, use a interface de linha de comando ou os endpoints disponíveis para:
+   - Após subir os contêineres:
+   - Acesse: http://localhost:8082/
+   Para:
    - Criar eventos.
    - Votar em eventos.
    - Visualizar resultados.
 
-6. **Parar o Sistema**:
+7. **Parar o Sistema**:
    Para encerrar os contêineres:
    ```bash
    docker-compose down
