@@ -98,7 +98,6 @@
     <div class="container">
         <h1>Plataforma de Votação e Apostas Blockchain</h1>
 
-        <!-- Seleção de Usuário -->
         <div class="user-section">
             <h2>Selecione seu Usuário</h2>
             <label for="username">Nome de Usuário:</label>
@@ -107,13 +106,11 @@
             <div id="user-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Exibição do Saldo -->
         <div class="balance-section" style="display:none;">
             <h2>Seu Saldo</h2>
             <p id="balance">Carregando...</p>
         </div>
 
-        <!-- Criação de Evento -->
         <div class="create-event-section" style="display:none;">
             <h2>Criar Novo Evento</h2>
             <label for="event-name">Nome do Evento:</label>
@@ -126,7 +123,6 @@
             <div id="create-event-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Apostar em um Evento -->
         <div class="apostar-section" style="display:none;">
             <h2>Apostar em um Evento</h2>
             <label for="evento-id">ID do Evento:</label>
@@ -142,7 +138,6 @@
             <div id="apostar-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Concluir Evento -->
         <div class="concluir-evento-section" style="display:none;">
             <h2>Concluir Evento</h2>
             <label for="concluir-evento-id">ID do Evento:</label>
@@ -155,7 +150,6 @@
             <div id="concluir-evento-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Depositar Saldo -->
         <div class="depositar-section" style="display:none;">
             <h2>Adicionar Saldo</h2>
             <label for="depositar-valor">Valor a Depositar:</label>
@@ -165,7 +159,6 @@
             <div id="depositar-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Sacar Saldo -->
         <div class="sacar-section" style="display:none;">
             <h2>Sacar Saldo</h2>
             <label for="sacar-valor">Valor a Sacar:</label>
@@ -175,32 +168,26 @@
             <div id="sacar-message" class="message" style="display:none;"></div>
         </div>
 
-        <!-- Lista de Eventos e Votação -->
         <div class="events-section" style="display:none;">
             <h2>Eventos Disponíveis</h2>
-            <div id="events-list">
-                <!-- Eventos serão carregados aqui -->
-            </div>
+            <div id="events-list"></div>
         </div>
     </div>
 
     <script>
         let currentUser = "";
-        const baseURL = "http://localhost:8081"; // Ajuste para a porta do nó atual
+        const baseURL = "http://localhost:8081";
 
-        // Função para definir o usuário
         function setUser() {
             const usernameInput = document.getElementById('username');
             const userMessage = document.getElementById('user-message');
             const username = usernameInput.value.trim();
-
             if (username === "") {
                 userMessage.innerText = "Por favor, insira um nome de usuário.";
                 userMessage.className = "message error";
                 userMessage.style.display = "block";
                 return;
             }
-
             currentUser = username;
             userMessage.style.display = "none";
             document.querySelector('.balance-section').style.display = "block";
@@ -210,12 +197,10 @@
             document.querySelector('.concluir-evento-section').style.display = "block";
             document.querySelector('.depositar-section').style.display = "block";
             document.querySelector('.sacar-section').style.display = "block";
-
             fetchBalance();
             fetchEvents();
         }
 
-        // Função para buscar o saldo do usuário
         function fetchBalance() {
             fetch(`${baseURL}/saldo?usuario=${encodeURIComponent(currentUser)}`)
                 .then(response => response.json())
@@ -224,38 +209,30 @@
                 })
                 .catch(error => {
                     document.getElementById('balance').innerText = "Erro ao carregar o saldo.";
-                    console.error('Erro:', error);
                 });
         }
 
-        // Função para criar um novo evento
         function createNewEvent() {
             const eventName = document.getElementById('event-name').value.trim();
             const eventOptions = document.getElementById('event-option').value.trim();
-
             const createEventMessage = document.getElementById('create-event-message');
-
             if (eventName === "" || eventOptions === "") {
                 createEventMessage.innerText = "Por favor, preencha todos os campos.";
                 createEventMessage.className = "message error";
                 createEventMessage.style.display = "block";
                 return;
             }
-
             const optionsArray = eventOptions.split(',').map(opt => opt.trim()).filter(opt => opt !== "");
-
             if (optionsArray.length < 2) {
                 createEventMessage.innerText = "Por favor, insira pelo menos duas opções de votação.";
                 createEventMessage.className = "message error";
                 createEventMessage.style.display = "block";
                 return;
             }
-
             const payload = {
                 nome: eventName,
                 opcoes: optionsArray
             };
-
             fetch(`${baseURL}/criar-evento`, {
                 method: 'POST',
                 headers: {
@@ -270,38 +247,32 @@
                 createEventMessage.style.display = "block";
                 document.getElementById('event-name').value = "";
                 document.getElementById('event-option').value = "";
-                fetchEvents(); // Atualiza a lista de eventos
+                fetchEvents();
             })
             .catch((error) => {
                 createEventMessage.innerText = "Erro ao criar o evento.";
                 createEventMessage.className = "message error";
                 createEventMessage.style.display = "block";
-                console.error('Erro:', error);
             });
         }
 
-        // Função para apostar em um evento
         function apostar() {
             const eventoId = document.getElementById('evento-id').value.trim();
             const opcao = document.getElementById('opcao-aposta').value.trim();
             const valor = parseFloat(document.getElementById('valor-aposta').value.trim());
-
             const apostarMessage = document.getElementById('apostar-message');
-
             if (eventoId === "" || opcao === "" || isNaN(valor) || valor <= 0) {
                 apostarMessage.innerText = "Por favor, preencha todos os campos com valores válidos.";
                 apostarMessage.className = "message error";
                 apostarMessage.style.display = "block";
                 return;
             }
-
             const payload = {
                 usuario: currentUser,
                 evento_id: parseInt(eventoId),
                 opcao: opcao,
                 valor: valor
             };
-
             fetch(`${baseURL}/apostar`, {
                 method: 'POST',
                 headers: {
@@ -322,36 +293,30 @@
                 document.getElementById('evento-id').value = "";
                 document.getElementById('opcao-aposta').value = "";
                 document.getElementById('valor-aposta').value = "";
-                fetchBalance(); // Atualiza o saldo após apostar
-                fetchEvents();   // Atualiza a lista de eventos
+                fetchBalance();
+                fetchEvents();
             })
             .catch((error) => {
                 apostarMessage.innerText = `Erro ao registrar a aposta: ${error.message}`;
                 apostarMessage.className = "message error";
                 apostarMessage.style.display = "block";
-                console.error('Erro:', error);
             });
         }
 
-        // Função para concluir um evento
         function concluirEvento() {
             const eventoId = document.getElementById('concluir-evento-id').value.trim();
             const opcaoVencedora = document.getElementById('opcao-vencedora').value.trim();
-
             const concluirEventoMessage = document.getElementById('concluir-evento-message');
-
             if (eventoId === "" || opcaoVencedora === "") {
                 concluirEventoMessage.innerText = "Por favor, preencha todos os campos.";
                 concluirEventoMessage.className = "message error";
                 concluirEventoMessage.style.display = "block";
                 return;
             }
-
             const payload = {
                 evento_id: parseInt(eventoId),
                 opcao_vencedora: opcaoVencedora
             };
-
             fetch(`${baseURL}/concluir-evento`, {
                 method: 'POST',
                 headers: {
@@ -371,35 +336,29 @@
                 concluirEventoMessage.style.display = "block";
                 document.getElementById('concluir-evento-id').value = "";
                 document.getElementById('opcao-vencedora').value = "";
-                fetchBalance(); // Atualiza os saldos após concluir evento
-                fetchEvents();   // Atualiza a lista de eventos
+                fetchBalance();
+                fetchEvents();
             })
             .catch((error) => {
                 concluirEventoMessage.innerText = `Erro ao concluir o evento: ${error.message}`;
                 concluirEventoMessage.className = "message error";
                 concluirEventoMessage.style.display = "block";
-                console.error('Erro:', error);
             });
         }
 
-        // Função para depositar saldo
         function depositar() {
             const valor = parseFloat(document.getElementById('depositar-valor').value.trim());
-
             const depositarMessage = document.getElementById('depositar-message');
-
             if (isNaN(valor) || valor <= 0) {
                 depositarMessage.innerText = "Por favor, insira um valor válido para depósito.";
                 depositarMessage.className = "message error";
                 depositarMessage.style.display = "block";
                 return;
             }
-
             const payload = {
                 usuario: currentUser,
                 valor: valor
             };
-
             fetch(`${baseURL}/depositar`, {
                 method: 'POST',
                 headers: {
@@ -418,34 +377,28 @@
                 depositarMessage.className = "message success";
                 depositarMessage.style.display = "block";
                 document.getElementById('depositar-valor').value = "";
-                fetchBalance(); // Atualiza o saldo após depósito
+                fetchBalance();
             })
             .catch((error) => {
                 depositarMessage.innerText = `Erro ao adicionar saldo: ${error.message}`;
                 depositarMessage.className = "message error";
                 depositarMessage.style.display = "block";
-                console.error('Erro:', error);
             });
         }
 
-        // Função para sacar saldo
         function sacar() {
             const valor = parseFloat(document.getElementById('sacar-valor').value.trim());
-
             const sacarMessage = document.getElementById('sacar-message');
-
             if (isNaN(valor) || valor <= 0) {
                 sacarMessage.innerText = "Por favor, insira um valor válido para saque.";
                 sacarMessage.className = "message error";
                 sacarMessage.style.display = "block";
                 return;
             }
-
             const payload = {
                 usuario: currentUser,
                 valor: valor
             };
-
             fetch(`${baseURL}/sacar`, {
                 method: 'POST',
                 headers: {
@@ -464,61 +417,47 @@
                 sacarMessage.className = "message success";
                 sacarMessage.style.display = "block";
                 document.getElementById('sacar-valor').value = "";
-                fetchBalance(); // Atualiza o saldo após saque
+                fetchBalance();
             })
             .catch((error) => {
                 sacarMessage.innerText = `Erro ao realizar saque: ${error.message}`;
                 sacarMessage.className = "message error";
                 sacarMessage.style.display = "block";
-                console.error('Erro:', error);
             });
         }
 
-        // Função para buscar a lista de eventos
         function fetchEvents() {
             fetch(`${baseURL}/eventos`)
                 .then(response => response.json())
                 .then(data => {
                     const eventsList = document.getElementById('events-list');
                     eventsList.innerHTML = "";
-
                     if (data.length === 0) {
                         eventsList.innerHTML = "<p>Nenhum evento disponível no momento.</p>";
                         return;
                     }
-
                     data.forEach(evento => {
                         const eventDiv = document.createElement('div');
                         eventDiv.className = "event";
-
                         const eventTitle = document.createElement('h3');
                         eventTitle.innerText = `${evento.nome} (ID: ${evento.id})`;
                         eventDiv.appendChild(eventTitle);
-
                         const optionsList = document.createElement('ul');
                         optionsList.className = "options";
-
                         evento.opcoes.forEach(opcao => {
                             const optionItem = document.createElement('li');
-
                             const optionButton = document.createElement('button');
                             optionButton.innerText = opcao;
                             optionButton.onclick = () => votar(evento.id, opcao);
-
                             optionItem.appendChild(optionButton);
                             optionsList.appendChild(optionItem);
                         });
-
                         eventDiv.appendChild(optionsList);
-
-                        // Exibir resultados de votos
                         const votosDiv = document.createElement('div');
                         votosDiv.className = "votos";
                         votosDiv.innerHTML = "<h4>Resultados:</h4>";
-
                         const votosList = document.createElement('ul');
                         votosList.className = "options";
-
                         for (const [opcao, apostas] of Object.entries(evento.votos)) {
                             let count = apostas.length;
                             let totalApostado = 0;
@@ -527,33 +466,27 @@
                             });
                             votosList.innerHTML += `<li>${opcao}: ${count} aposta(s) | Total Apostado: R$ ${totalApostado.toFixed(2)}</li>`;
                         }
-
                         votosDiv.appendChild(votosList);
                         eventDiv.appendChild(votosDiv);
-
                         eventsList.appendChild(eventDiv);
                     });
                 })
                 .catch(error => {
                     const eventsList = document.getElementById('events-list');
                     eventsList.innerHTML = "<p>Erro ao carregar os eventos.</p>";
-                    console.error('Erro:', error);
                 });
         }
 
-        // Função para votar em uma opção de um evento
         function votar(eventoId, opcao) {
             if (currentUser === "") {
                 alert("Por favor, selecione um usuário primeiro.");
                 return;
             }
-
             const payload = {
                 usuario: currentUser,
                 evento_id: eventoId,
                 opcao: opcao
             };
-
             fetch(`${baseURL}/votar`, {
                 method: 'POST',
                 headers: {
@@ -564,12 +497,11 @@
             .then(response => response.json())
             .then(data => {
                 alert("Voto registrado com sucesso!");
-                fetchBalance(); // Atualiza o saldo após votar
-                fetchEvents();   // Atualiza a lista de eventos após votar
+                fetchBalance();
+                fetchEvents();
             })
             .catch((error) => {
                 alert("Erro ao registrar o voto.");
-                console.error('Erro:', error);
             });
         }
     </script>
